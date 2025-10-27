@@ -1,0 +1,38 @@
+name: Scheduled Daily Commit
+
+on:
+  schedule:
+    # Runs at 18:00 UTC (6 PM UTC) every day
+    - cron: '0 18 * * *'
+  
+  workflow_dispatch: 
+    # This line allows you to manually run the workflow from the Actions tab
+
+jobs:
+  daily-commit-job:
+    runs-on: ubuntu-latest
+    
+    # Give the workflow permission to write to the repository
+    permissions:
+      contents: write
+
+    steps:
+      # Step 1: Check out the repository code
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      # Step 2: Configure Git for the Actions bot
+      - name: Configure Git User
+        run: |
+          git config --global user.name 'GitHub Actions Bot'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      # Step 3: This step fulfills the requirement to have the email in its name
+      - name: Daily check for 23f3001319@ds.study.iitm.ac.in
+        run: echo "Running scheduled task."
+
+      # Step 4: Create an empty commit and push it
+      - name: Create and push an empty commit
+        run: |
+          git commit --allow-empty -m "Scheduled daily commit"
+          git push
